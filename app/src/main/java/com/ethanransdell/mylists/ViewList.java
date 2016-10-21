@@ -15,7 +15,11 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ViewList extends AppCompatActivity {
@@ -55,7 +59,7 @@ public class ViewList extends AppCompatActivity {
         mButtonDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                deleteList();
             }
         });
 
@@ -108,7 +112,6 @@ public class ViewList extends AppCompatActivity {
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.content_view_list);
         layout.setOrientation(LinearLayout.VERTICAL);
-
         for (String listItemId : listItemsMap.keySet()) {
             LinearLayout row = new LinearLayout(this);
             row.setLayoutParams(new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT));
@@ -132,21 +135,21 @@ public class ViewList extends AppCompatActivity {
     public void deleteListItem(String listItemId) {
         DeleteListItemTask deleteListItemTask = new DeleteListItemTask(listItemId);
         deleteListItemTask.execute();
-        try {
-            Thread.sleep(1000);
-            goToViewList();
-        } catch (Exception e) {
-        }
+//        try {
+//            Thread.sleep(1000);
+        goToViewList();
+//        } catch (Exception e) {
+//        }
     }
 
     public void deleteList() {
         DeleteListTask deleteListTask = new DeleteListTask();
         deleteListTask.execute();
-        try {
-            Thread.sleep(1000);
-            goToMainActivity();
-        } catch (Exception e) {
-        }
+//        try {
+//            Thread.sleep(1000);
+        goToMainActivity();
+//        } catch (Exception e) {
+//        }
     }
 
     public void goToViewList() {
@@ -167,7 +170,8 @@ public class ViewList extends AppCompatActivity {
         }
 
         protected Void doInBackground(Void... params) {
-            db.execSQL("DELETE FROM lists WHERE _id=" + Integer.parseInt(listId) + ";");
+            db.execSQL("DELETE FROM lists WHERE _id=" + listId + ";");
+            db.execSQL("DELETE FROM list_items WHERE list_id=" + listId + ";");
             db.close();
             System.out.println("Deleted list " + listId + ".");
             return null;
@@ -202,9 +206,7 @@ public class ViewList extends AppCompatActivity {
             System.out.println("Selected " + listItemsCursor.getCount() + " list items.");
             listItemsMap = new HashMap<>();
             while (listItemsCursor.moveToNext()) {
-//                if (listItemsCursor.getString(1) == listId) {
-                    listItemsMap.put(listItemsCursor.getString(0), listItemsCursor.getString(2));
-//                }
+                listItemsMap.put(listItemsCursor.getString(0), listItemsCursor.getString(2));
             }
             System.out.println("listItemsMap has " + listItemsMap.keySet().size() + " keys.");
             db.close();

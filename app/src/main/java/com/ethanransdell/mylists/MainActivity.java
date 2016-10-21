@@ -136,12 +136,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         protected Void doInBackground(Void... params) {
-            db.execSQL("DROP TABLE lists;");
-            db.execSQL("DROP TABLE list_items;");
+//            db.execSQL("DROP TABLE lists;");
+//            db.execSQL("DROP TABLE list_items;");
             db.execSQL("CREATE TABLE IF NOT EXISTS lists(" + BaseColumns._ID + " INTEGER PRIMARY KEY, list_name TEXT);");
             db.execSQL("CREATE TABLE IF NOT EXISTS list_items(" + BaseColumns._ID + " INTEGER PRIMARY KEY, list_id INTEGER, list_item_name TEXT);");
             System.out.println("Created tables.");
-            if (prefs.getBoolean("firstrun", true)||true) {
+            if (prefs.getBoolean("firstrun", true)) {
                 ContentValues sampleListsValues;
                 ContentValues sampleListItemsValues;
                 Long newListRowId;

@@ -1,19 +1,21 @@
 <resources>
     <string name="app_name">My Lists</string>
-    <string name="title_add_list">Add List</string>
-    <string name="title_view_list">View List</string>
-    <string name="title_add_list_item">Add List Item</string>
     <string name="action_settings">Settings</string>
     <string name="add_button">Add</string>
     <string name="new_list_name">New List Name</string>
     <string name="new_list_item_name">New List Item Name</string>
+
+    <!-- Titles -->
+    <string name="title_add_list">Add List</string>
+    <string name="title_view_list">View List</string>
+    <string name="title_add_list_item">Add List Item</string>
+    <string name="title_activity_add_list">AddList</string>
+    <string name="title_activity_view_list">ViewList</string>
+    <string name="title_activity_add_list_item">AddListItem</string>
 
     <!-- ID Keys -->
     <string name="LIST_ID_KEY">LIST_ID</string>
     <string name="LIST_NAME_KEY">LIST_NAME</string>
     <string name="LIST_ITEM_ID_KEY">LIST_ITEM_ID</string>
     <string name="LIST_ITEM_NAME_KEY">LIST_ITEM_NAME</string>
-    <string name="title_activity_add_list">AddList</string>
-    <string name="title_activity_view_list">ViewList</string>
-    <string name="title_activity_add_list_item">AddListItem</string>
 </resources>

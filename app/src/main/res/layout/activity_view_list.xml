@@ -23,11 +23,12 @@
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@android:drawable/btn_dialog"
+                app:srcCompat="@android:drawable/ic_delete"
                 android:id="@+id/button_delete"
                 android:layout_gravity="top|end"
-                style="@style/Widget.AppCompat.ImageButton"
-                android:background="@android:drawable/alert_dark_frame" />
+                style="@android:style/Widget.DeviceDefault.Light.ImageButton"
+                android:background="@android:color/transparent"
+                android:paddingRight="10dp"/>
 
         </android.support.v7.widget.Toolbar>
 

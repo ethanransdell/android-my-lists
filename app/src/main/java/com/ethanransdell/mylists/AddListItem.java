@@ -45,11 +45,11 @@ public class AddListItem extends AppCompatActivity {
                     newListItemNameString = mEditTextNewListItemName.getText().toString();
                     AddListItemTask addListItemTask = new AddListItemTask();
                     addListItemTask.execute();
-                    try {
-                        Thread.sleep(1000);
+//                    try {
+//                        Thread.sleep(1000);
                         goToViewList(listId, listName);
-                    } catch (Exception e) {
-                    }
+//                    } catch (Exception e) {
+//                    }
                 } else {
                     mEditTextNewListItemName.setError("Enter a valid list name.");
                 }
