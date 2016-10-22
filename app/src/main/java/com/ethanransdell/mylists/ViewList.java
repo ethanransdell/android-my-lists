@@ -31,6 +31,7 @@ public class ViewList extends AppCompatActivity {
     private ImageButton mButtonDelete;
 
     private Map<String, String> listItemsMap;
+    private List<String> listItemsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +113,7 @@ public class ViewList extends AppCompatActivity {
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.content_view_list);
         layout.setOrientation(LinearLayout.VERTICAL);
-        for (String listItemId : listItemsMap.keySet()) {
+        for (String listItemId : listItemsList) {
             LinearLayout row = new LinearLayout(this);
             row.setLayoutParams(new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT));
             Button listButton = new Button(this);
@@ -120,10 +121,12 @@ public class ViewList extends AppCompatActivity {
             listButton.setText(listItemsMap.get(listItemId));
             listButton.setTag(R.string.LIST_ITEM_ID_KEY, listItemId);
             listButton.setTag(R.string.LIST_ITEM_NAME_KEY, listItemsMap.get(listItemId));
+            listButton.setId(Integer.parseInt(listItemId));
             listButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     deleteListItem(v.getTag(R.string.LIST_ITEM_ID_KEY).toString());
+                    v.setVisibility(View.GONE);
                 }
             });
             row.addView(listButton);
@@ -137,7 +140,7 @@ public class ViewList extends AppCompatActivity {
         deleteListItemTask.execute();
 //        try {
 //            Thread.sleep(1000);
-        goToViewList();
+//        goToViewList();
 //        } catch (Exception e) {
 //        }
     }
@@ -205,9 +208,12 @@ public class ViewList extends AppCompatActivity {
             listItemsCursor = db.rawQuery("SELECT * FROM list_items WHERE list_id=" + listId + ";", null);
             System.out.println("Selected " + listItemsCursor.getCount() + " list items.");
             listItemsMap = new HashMap<>();
+            listItemsList = new ArrayList<>();
             while (listItemsCursor.moveToNext()) {
                 listItemsMap.put(listItemsCursor.getString(0), listItemsCursor.getString(2));
+                listItemsList.add(listItemsCursor.getString(0));
             }
+            Collections.sort(listItemsList);
             System.out.println("listItemsMap has " + listItemsMap.keySet().size() + " keys.");
             db.close();
             return null;

@@ -18,13 +18,17 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
     private SharedPreferences prefs = null;
     private Map<String, String> listsMap;
+    private List<String> listsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout layout = (LinearLayout) findViewById(R.id.content_main);
         layout.setOrientation(LinearLayout.VERTICAL);
 
-        for (String listId : listsMap.keySet()) {
+        for (String listId : listsList) {
             LinearLayout row = new LinearLayout(this);
             row.setLayoutParams(new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT));
             Button listButton = new Button(this);
@@ -163,9 +167,12 @@ public class MainActivity extends AppCompatActivity {
             listsCursor = db.rawQuery("SELECT * FROM lists;", null);
             System.out.println("Selected " + listsCursor.getCount() + " lists.");
             listsMap = new HashMap<>();
+            listsList = new ArrayList<>();
             while (listsCursor.moveToNext()) {
                 listsMap.put(listsCursor.getString(0), listsCursor.getString(1));
+                listsList.add(listsCursor.getString(0));
             }
+            Collections.sort(listsList);
             System.out.println("listsMap has " + listsMap.keySet().size() + " keys.");
             db.close();
             return null;

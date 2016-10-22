@@ -1,12 +1,14 @@
 package com.ethanransdell.mylists;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -23,6 +25,10 @@ public class AddList extends AppCompatActivity {
 
         mEditTextNewListName = (EditText) findViewById(R.id.edit_text_new_list_item_name);
         mButtonAdd = (Button) findViewById(R.id.button_add);
+
+        mEditTextNewListName.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(mEditTextNewListName, InputMethodManager.SHOW_IMPLICIT);
 
         mButtonAdd.setOnClickListener(new View.OnClickListener() {
             @Override

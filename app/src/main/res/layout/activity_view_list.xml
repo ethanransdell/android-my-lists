@@ -23,7 +23,7 @@
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@android:drawable/ic_delete"
+                app:srcCompat="@drawable/ic_delete_white_24dp"
                 android:id="@+id/button_delete"
                 android:layout_gravity="top|end"
                 style="@android:style/Widget.DeviceDefault.Light.ImageButton"
@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_menu_edit" />
+        app:srcCompat="@drawable/ic_plus_white_48dp" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floating_main_activity"
@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_media_previous" />
+        app:srcCompat="@drawable/ic_home_white_48dp" />
 
     <ScrollView
         android:layout_width="match_parent"
