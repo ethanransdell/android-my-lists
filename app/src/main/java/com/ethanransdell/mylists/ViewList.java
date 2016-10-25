@@ -145,6 +145,7 @@ public class ViewList extends AppCompatActivity {
     public void deleteList() {
 //        DeleteListTask deleteListTask = new DeleteListTask();
 //        deleteListTask.execute();
+//        goToMainActivity();
         new AlertDialog.Builder(this)
                 .setTitle(R.string.delete_list_title)
                 .setMessage(R.string.delete_list_confirmation)
@@ -163,7 +164,6 @@ public class ViewList extends AppCompatActivity {
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
 
-        goToMainActivity();
     }
 
     public void goToViewList() {
