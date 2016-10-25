@@ -1,10 +1,7 @@
 package com.ethanransdell.mylists;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,7 +13,8 @@ public class AddList extends AppCompatActivity {
 
     private EditText mEditTextNewListName;
     private Button mButtonAdd;
-    private String newListNameString;
+
+    private DBHelper dbh = new DBHelper(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +32,8 @@ public class AddList extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (listNameIsValid()) {
-                    newListNameString = mEditTextNewListName.getText().toString();
-                    AddListTask addListTask = new AddListTask();
-                    addListTask.execute();
+                    dbh.addList(mEditTextNewListName.getText().toString());
+                    goToMainActivity();
                 } else {
                     mEditTextNewListName.setError("Enter a valid list name.");
                 }
@@ -56,20 +53,5 @@ public class AddList extends AppCompatActivity {
         System.out.println("Going to main activity...");
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
         startActivity(mainActivityIntent);
-    }
-
-    public class AddListTask extends AsyncTask<Void, Void, Void> {
-
-        private SQLiteDatabase db = openOrCreateDatabase("my_lists", MODE_PRIVATE, null);
-
-        protected Void doInBackground(Void... params) {
-            ContentValues values = new ContentValues();
-            values.put("list_name", newListNameString);
-            Long newListRowId = db.insert("lists", null, values);
-            System.out.println("Added newListRowId " + newListRowId.toString());
-            db.close();
-            goToMainActivity();
-            return null;
-        }
     }
 }
