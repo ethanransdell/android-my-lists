@@ -1,20 +1,14 @@
 package com.ethanransdell.mylists;
 
 import android.app.ActionBar;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -30,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private Map<String, String> listsMap;
     private List<String> listsList;
 
-    Cursor dbResults;
+    private Cursor dbResults;
     private DBHelper dbh = new DBHelper(this);
 
     @Override
@@ -50,27 +44,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        dbh = new DBHelper(this);
-        db.execSQL("CREATE TABLE IF NOT EXISTS lists(" + BaseColumns._ID + " INTEGER PRIMARY KEY, list_name TEXT);");
-        db.execSQL("CREATE TABLE IF NOT EXISTS list_items(" + BaseColumns._ID + " INTEGER PRIMARY KEY, list_id INTEGER, list_item_name TEXT);");
-        System.out.println("Created tables.");
         if (prefs.getBoolean("firstrun", true)) {
-            ContentValues sampleListsValues;
-            ContentValues sampleListItemsValues;
-            Long newListRowId;
-            Long newListItemRowId;
-            for (int i = 0; i < 3; i++) {
-                sampleListsValues = new ContentValues();
-                sampleListsValues.put("list_name", "Sample List " + (i + 1));
-                newListRowId = db.insert("lists", null, sampleListsValues);
-                for (int j = 0; j < 5; j++) {
-                    sampleListItemsValues = new ContentValues();
-                    sampleListItemsValues.put("list_id", newListRowId.toString());
-                    sampleListItemsValues.put("list_item_name", "Sample Item " + (j + 1));
-                    newListItemRowId = db.insert("list_items", null, sampleListItemsValues);
-                }
-            }
-            System.out.println("First run, added sample lists.");
+            if (dbh.firstRun())
             prefs.edit().putBoolean("firstrun", false).commit();
         }
     }
@@ -78,12 +53,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         // Remove any previously created buttons so we can rebuild them if the user presses the back button
         LinearLayout previousLayout = (LinearLayout) findViewById(R.id.content_main);
         previousLayout.removeAllViews();
-
-        dbh = new DBHelper(this);
+        // Query for lists
         dbResults = dbh.getLists();
         listsMap = new HashMap<>();
         listsList = new ArrayList<>();
@@ -112,7 +85,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void createListButtons() {
-
         System.out.println("Creating list buttons.");
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.content_main);
