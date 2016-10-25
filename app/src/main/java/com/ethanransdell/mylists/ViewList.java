@@ -5,11 +5,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -19,7 +16,6 @@ import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,6 +107,16 @@ public class ViewList extends AppCompatActivity {
         startActivity(addListItemIntent);
     }
 
+    public void goToViewList() {
+        System.out.println("Going to view list...");
+        Intent viewListIntent = new Intent(this, ViewList.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("LIST_ID", listId);
+        bundle.putString("LIST_NAME", listName);
+        viewListIntent.putExtras(bundle);
+        startActivity(viewListIntent);
+    }
+
     public void createListItemButtons() {
 
         System.out.println("Creating list item buttons.");
@@ -156,15 +162,5 @@ public class ViewList extends AppCompatActivity {
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
-    }
-
-    public void goToViewList() {
-        System.out.println("Going to view list...");
-        Intent viewListIntent = new Intent(this, ViewList.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("LIST_ID", listId);
-        bundle.putString("LIST_NAME", listName);
-        viewListIntent.putExtras(bundle);
-        startActivity(viewListIntent);
     }
 }

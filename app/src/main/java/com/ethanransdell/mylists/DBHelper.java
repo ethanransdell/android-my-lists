@@ -22,7 +22,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
     }
 
-    public boolean insertList(String listName) {
+    public boolean addList(String listName) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("list_name", listName);
@@ -30,7 +30,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public boolean insertListItem(String listId, String listItemName) {
+    public boolean addListItem(String listId, String listItemName) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("list_id", listId);
@@ -54,14 +54,14 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public Cursor getLists() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("select * from lists", null);
-        return res;
+        Cursor results = db.rawQuery("select * from lists", null);
+        return results;
     }
 
     public Cursor getListItems(String listId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("select * from list_items where list_id = " + listId + "", null);
-        return res;
+        Cursor results = db.rawQuery("select * from list_items where list_id = " + listId + "", null);
+        return results;
     }
 
     public boolean firstRun() {

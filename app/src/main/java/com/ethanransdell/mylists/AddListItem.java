@@ -1,13 +1,8 @@
 package com.ethanransdell.mylists;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -23,7 +18,8 @@ public class AddListItem extends AppCompatActivity {
 
     private EditText mEditTextNewListItemName;
     private Button mButtonAdd;
-    private String newListItemNameString;
+
+    private DBHelper dbh = new DBHelper(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,14 +44,8 @@ public class AddListItem extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (listItemNameIsValid()) {
-                    newListItemNameString = mEditTextNewListItemName.getText().toString();
-                    AddListItemTask addListItemTask = new AddListItemTask();
-                    addListItemTask.execute();
-//                    try {
-//                        Thread.sleep(1000);
-                        goToViewList(listId, listName);
-//                    } catch (Exception e) {
-//                    }
+                    dbh.addListItem(listId, mEditTextNewListItemName.getText().toString());
+                    goToViewList(listId, listName);
                 } else {
                     mEditTextNewListItemName.setError("Enter a valid list name.");
                 }
@@ -81,18 +71,4 @@ public class AddListItem extends AppCompatActivity {
         startActivity(viewListIntent);
     }
 
-    public class AddListItemTask extends AsyncTask<Void, Void, Void> {
-
-        private SQLiteDatabase db = openOrCreateDatabase("my_lists", MODE_PRIVATE, null);
-
-        protected Void doInBackground(Void... params) {
-            ContentValues values = new ContentValues();
-            values.put("list_id", listId);
-            values.put("list_item_name", newListItemNameString);
-            Long newListItemRowId = db.insert("list_items", null, values);
-            System.out.println("Added newListItemRowId " + newListItemRowId.toString());
-            db.close();
-            return null;
-        }
-    }
 }
