@@ -4,6 +4,8 @@
     <string name="add_button">Add</string>
     <string name="new_list_name">New List Name</string>
     <string name="new_list_item_name">New List Item Name</string>
+    <string name="delete_list_title">Delete List</string>
+    <string name="delete_list_confirmation">Are you sure you want to delete this list?</string>
 
     <!-- Titles -->
     <string name="title_add_list">Add List</string>
