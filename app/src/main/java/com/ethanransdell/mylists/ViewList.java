@@ -1,6 +1,8 @@
 package com.ethanransdell.mylists;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -138,21 +140,30 @@ public class ViewList extends AppCompatActivity {
     public void deleteListItem(String listItemId) {
         DeleteListItemTask deleteListItemTask = new DeleteListItemTask(listItemId);
         deleteListItemTask.execute();
-//        try {
-//            Thread.sleep(1000);
-//        goToViewList();
-//        } catch (Exception e) {
-//        }
     }
 
     public void deleteList() {
-        DeleteListTask deleteListTask = new DeleteListTask();
-        deleteListTask.execute();
-//        try {
-//            Thread.sleep(1000);
+//        DeleteListTask deleteListTask = new DeleteListTask();
+//        deleteListTask.execute();
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.delete_list_title)
+                .setMessage(R.string.delete_list_confirmation)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        DeleteListTask deleteListTask = new DeleteListTask();
+                        deleteListTask.execute();
+                        goToMainActivity();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+
         goToMainActivity();
-//        } catch (Exception e) {
-//        }
     }
 
     public void goToViewList() {
