@@ -4,7 +4,9 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.provider.BaseColumns;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -43,9 +45,12 @@ public class MainActivity extends AppCompatActivity {
                 goToAddList();
             }
         });
-
-        if (prefs.getBoolean("firstrun", true)) {
-            if (dbh.firstRun())
+        if (prefs.getBoolean("firstrun", true) || !prefs.contains("firstrun")) {
+            SQLiteDatabase db = openOrCreateDatabase("my_lists", MODE_PRIVATE, null);
+            db.execSQL("CREATE TABLE IF NOT EXISTS lists(" + BaseColumns._ID + " INTEGER PRIMARY KEY, list_name TEXT);");
+            db.execSQL("CREATE TABLE IF NOT EXISTS list_items(" + BaseColumns._ID + " INTEGER PRIMARY KEY, list_id INTEGER, list_item_name TEXT);");
+            db.close();
+            dbh.firstRun();
             prefs.edit().putBoolean("firstrun", false).commit();
         }
     }

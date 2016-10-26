@@ -92,35 +92,30 @@ public class ViewList extends AppCompatActivity {
     }
 
     public void goToMainActivity() {
-        System.out.println("Going to main activity...");
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
         startActivity(mainActivityIntent);
     }
 
     public void goToAddListItem() {
-        System.out.println("Going to add list item...");
         Intent addListItemIntent = new Intent(this, AddListItem.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("LIST_ID", listId);
-        bundle.putString("LIST_NAME", listName);
-        addListItemIntent.putExtras(bundle);
+        addListItemIntent.putExtras(getListBundle());
         startActivity(addListItemIntent);
     }
 
-    public void goToViewList() {
-        System.out.println("Going to view list...");
-        Intent viewListIntent = new Intent(this, ViewList.class);
+//    public void goToViewList() {
+//        Intent viewListIntent = new Intent(this, ViewList.class);
+//        viewListIntent.putExtras(getListBundle());
+//        startActivity(viewListIntent);
+//    }
+
+    public Bundle getListBundle() {
         Bundle bundle = new Bundle();
         bundle.putString("LIST_ID", listId);
         bundle.putString("LIST_NAME", listName);
-        viewListIntent.putExtras(bundle);
-        startActivity(viewListIntent);
+        return bundle;
     }
 
     public void createListItemButtons() {
-
-        System.out.println("Creating list item buttons.");
-
         LinearLayout layout = (LinearLayout) findViewById(R.id.content_view_list);
         layout.setOrientation(LinearLayout.VERTICAL);
         for (String listItemId : listItemsList) {
@@ -137,11 +132,11 @@ public class ViewList extends AppCompatActivity {
                 public void onClick(View v) {
                     dbh.deleteListItem(v.getTag(R.string.LIST_ITEM_ID_KEY).toString());
                     v.setVisibility(View.GONE);
+//                    goToViewList();
                 }
             });
             row.addView(listButton);
             layout.addView(row);
-            System.out.println("Created button for list item " + listItemId + ": " + listItemsMap.get(listItemId));
         }
     }
 
