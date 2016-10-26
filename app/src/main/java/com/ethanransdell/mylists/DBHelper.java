@@ -66,8 +66,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public boolean firstRun() {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.rawQuery("CREATE TABLE IF NOT EXISTS lists(" + BaseColumns._ID + " INTEGER PRIMARY KEY, list_name TEXT);", null);
-        db.rawQuery("CREATE TABLE IF NOT EXISTS list_items(" + BaseColumns._ID + " INTEGER PRIMARY KEY, list_id INTEGER, list_item_name TEXT);", null);
+//        db.rawQuery("CREATE TABLE IF NOT EXISTS lists(" + BaseColumns._ID + " INTEGER PRIMARY KEY, list_name TEXT);", null);
+//        db.rawQuery("CREATE TABLE IF NOT EXISTS list_items(" + BaseColumns._ID + " INTEGER PRIMARY KEY, list_id INTEGER, list_item_name TEXT);", null);
         System.out.println("Created tables.");
         ContentValues sampleListsValues;
         ContentValues sampleListItemsValues;
