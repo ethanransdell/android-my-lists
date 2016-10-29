@@ -30,11 +30,11 @@ public class DBHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public boolean addListItem(String listId, String listItemName) {
+    public boolean addItem(String listId, String itemName) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("list_id", listId);
-        contentValues.put("list_item_name", listItemName);
+        contentValues.put("list_item_name", itemName);
         db.insert("list_items", null, contentValues);
         return true;
     }
@@ -46,9 +46,9 @@ public class DBHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public boolean deleteListItem(String listItemId) {
+    public boolean deleteItem(String itemId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        int r = db.delete("list_items", "_id = ?", new String[]{listItemId});
+        int r = db.delete("list_items", "_id = ?", new String[]{itemId});
         return true;
     }
 
@@ -58,7 +58,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return results;
     }
 
-    public Cursor getListItems(String listId) {
+    public Cursor getItems(String listId) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor results = db.rawQuery("select * from list_items where list_id = " + listId + "", null);
         return results;
@@ -70,18 +70,18 @@ public class DBHelper extends SQLiteOpenHelper {
 //        db.rawQuery("CREATE TABLE IF NOT EXISTS list_items(" + BaseColumns._ID + " INTEGER PRIMARY KEY, list_id INTEGER, list_item_name TEXT);", null);
         System.out.println("Created tables.");
         ContentValues sampleListsValues;
-        ContentValues sampleListItemsValues;
+        ContentValues sampleItemsValues;
         Long newListRowId;
-        Long newListItemRowId;
+        Long newItemRowId;
         for (int i = 0; i < 3; i++) {
             sampleListsValues = new ContentValues();
             sampleListsValues.put("list_name", "Sample List " + (i + 1));
             newListRowId = db.insert("lists", null, sampleListsValues);
             for (int j = 0; j < 5; j++) {
-                sampleListItemsValues = new ContentValues();
-                sampleListItemsValues.put("list_id", newListRowId.toString());
-                sampleListItemsValues.put("list_item_name", "Sample Item " + (j + 1));
-                newListItemRowId = db.insert("list_items", null, sampleListItemsValues);
+                sampleItemsValues = new ContentValues();
+                sampleItemsValues.put("list_id", newListRowId.toString());
+                sampleItemsValues.put("list_item_name", "Sample Item " + (j + 1));
+                newItemRowId = db.insert("list_items", null, sampleItemsValues);
             }
         }
         return true;

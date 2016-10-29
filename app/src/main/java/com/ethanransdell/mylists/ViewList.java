@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class ViewList extends AppCompatActivity {
 
     private Intent incomingIntent;
@@ -28,8 +30,8 @@ public class ViewList extends AppCompatActivity {
     private String listName;
     private ImageButton mButtonDelete;
 
-    private Map<String, String> listItemsMap;
-    private List<String> listItemsList;
+    private Map<String, String> itemsMap;
+    private List<String> itemsList;
 
     private Cursor dbResults;
     private DBHelper dbh = new DBHelper(this);
@@ -41,11 +43,11 @@ public class ViewList extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton floating_add_list_item = (FloatingActionButton) findViewById(R.id.floating_add_list_item);
+        FloatingActionButton floating_add_list_item = (FloatingActionButton) findViewById(R.id.floating_add_item);
         floating_add_list_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                goToAddListItem();
+                goToAddItem();
             }
         });
 
@@ -69,7 +71,7 @@ public class ViewList extends AppCompatActivity {
         incomingExtras = incomingIntent.getExtras();
         listId = incomingExtras.getString("LIST_ID");
         listName = incomingExtras.getString("LIST_NAME");
-        toolbar.setTitle(listName);
+        toolbar.setTitle(StringUtils.capitalize(listName));
     }
 
     @Override
@@ -79,16 +81,15 @@ public class ViewList extends AppCompatActivity {
         LinearLayout previousLayout = (LinearLayout) findViewById(R.id.content_view_list);
         previousLayout.removeAllViews();
         // Query for lists
-        dbResults = dbh.getListItems(listId);
-        listItemsMap = new HashMap<>();
-        listItemsMap = new HashMap<>();
-        listItemsList = new ArrayList<>();
+        dbResults = dbh.getItems(listId);
+        itemsMap = new HashMap<>();
+        itemsList = new ArrayList<>();
         while (dbResults.moveToNext()) {
-            listItemsMap.put(dbResults.getString(0), dbResults.getString(2));
-            listItemsList.add(dbResults.getString(0));
+            itemsMap.put(dbResults.getString(0), dbResults.getString(2));
+            itemsList.add(dbResults.getString(0));
         }
-        Collections.sort(listItemsList);
-        createListItemButtons();
+        Collections.sort(itemsList);
+        createItemButtons();
     }
 
     public void goToMainActivity() {
@@ -96,17 +97,11 @@ public class ViewList extends AppCompatActivity {
         startActivity(mainActivityIntent);
     }
 
-    public void goToAddListItem() {
-        Intent addListItemIntent = new Intent(this, AddListItem.class);
-        addListItemIntent.putExtras(getListBundle());
-        startActivity(addListItemIntent);
+    public void goToAddItem() {
+        Intent addItemIntent = new Intent(this, AddItem.class);
+        addItemIntent.putExtras(getListBundle());
+        startActivity(addItemIntent);
     }
-
-//    public void goToViewList() {
-//        Intent viewListIntent = new Intent(this, ViewList.class);
-//        viewListIntent.putExtras(getListBundle());
-//        startActivity(viewListIntent);
-//    }
 
     public Bundle getListBundle() {
         Bundle bundle = new Bundle();
@@ -115,34 +110,52 @@ public class ViewList extends AppCompatActivity {
         return bundle;
     }
 
-    public void createListItemButtons() {
+    public void createItemButtons() {
         LinearLayout layout = (LinearLayout) findViewById(R.id.content_view_list);
         layout.setOrientation(LinearLayout.VERTICAL);
-        for (String listItemId : listItemsList) {
+        for (String itemId : itemsList) {
             LinearLayout row = new LinearLayout(this);
             row.setLayoutParams(new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT));
-            Button listButton = new Button(this);
-            listButton.setLayoutParams(new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT));
-            listButton.setText(listItemsMap.get(listItemId));
-            listButton.setTag(R.string.LIST_ITEM_ID_KEY, listItemId);
-            listButton.setTag(R.string.LIST_ITEM_NAME_KEY, listItemsMap.get(listItemId));
-            listButton.setId(Integer.parseInt(listItemId));
-            listButton.setOnClickListener(new View.OnClickListener() {
+            Button itemButton = new Button(this);
+            itemButton.setLayoutParams(new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT));
+            itemButton.setAllCaps(false);
+            itemButton.setText(itemsMap.get(itemId));
+            itemButton.setTag(R.string.ITEM_ID_KEY, itemId);
+            itemButton.setTag(R.string.ITEM_NAME_KEY, itemsMap.get(itemId));
+            itemButton.setId(Integer.parseInt(itemId));
+            itemButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    dbh.deleteListItem(v.getTag(R.string.LIST_ITEM_ID_KEY).toString());
-                    v.setVisibility(View.GONE);
-//                    goToViewList();
+                    deleteItem(v.getTag(R.string.ITEM_ID_KEY).toString(), v);
                 }
             });
-            row.addView(listButton);
+            row.addView(itemButton);
             layout.addView(row);
         }
     }
 
+    public void deleteItem(final String itemId, final View v) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.title_delete_item)
+                .setMessage(R.string.delete_item_confirmation)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dbh.deleteItem(itemId);
+                        v.setVisibility(View.GONE);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
     public void deleteList() {
         new AlertDialog.Builder(this)
-                .setTitle(R.string.delete_list_title)
+                .setTitle(R.string.title_delete_list)
                 .setMessage(R.string.delete_list_confirmation)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {

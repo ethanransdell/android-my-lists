@@ -10,13 +10,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class AddListItem extends AppCompatActivity {
+public class AddItem extends AppCompatActivity {
     private Intent incomingIntent;
     private Bundle incomingExtras;
     private String listId;
     private String listName;
 
-    private EditText mEditTextNewListItemName;
+    private EditText mEditTextNewItemName;
     private Button mButtonAdd;
 
     private DBHelper dbh = new DBHelper(this);
@@ -24,7 +24,7 @@ public class AddListItem extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_list_item);
+        setContentView(R.layout.activity_add_item);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -33,28 +33,29 @@ public class AddListItem extends AppCompatActivity {
         listId = incomingExtras.getString("LIST_ID");
         listName = incomingExtras.getString("LIST_NAME");
 
-        mEditTextNewListItemName = (EditText) findViewById(R.id.edit_text_new_list_item_name);
+        mEditTextNewItemName = (EditText) findViewById(R.id.edit_text_new_item_name);
         mButtonAdd = (Button) findViewById(R.id.button_add);
 
-        mEditTextNewListItemName.requestFocus();
+        //FIXME Not working
+        mEditTextNewItemName.requestFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(mEditTextNewListItemName, InputMethodManager.SHOW_IMPLICIT);
+        imm.showSoftInput(mEditTextNewItemName, InputMethodManager.SHOW_IMPLICIT);
 
         mButtonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (listItemNameIsValid()) {
-                    dbh.addListItem(listId, mEditTextNewListItemName.getText().toString());
+                if (itemNameIsValid()) {
+                    dbh.addItem(listId, mEditTextNewItemName.getText().toString());
                     goToViewList(listId, listName);
                 } else {
-                    mEditTextNewListItemName.setError("Enter a valid list name.");
+                    mEditTextNewItemName.setError(getString(R.string.new_item_validation));
                 }
             }
         });
     }
 
-    public boolean listItemNameIsValid() {
-        if (mEditTextNewListItemName.getText().toString() != null && mEditTextNewListItemName.getText().toString() != "") {
+    public boolean itemNameIsValid() {
+        if (mEditTextNewItemName.getText().toString() != null && mEditTextNewItemName.getText().toString() != "") {
             return true;
         } else {
             return false;

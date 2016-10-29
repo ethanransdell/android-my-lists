@@ -27,8 +27,8 @@
             android:label="@string/title_activity_view_list"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".AddListItem"
-            android:label="@string/title_activity_add_list_item"
+            android:name=".AddItem"
+            android:label="@string/title_activity_add_item"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
