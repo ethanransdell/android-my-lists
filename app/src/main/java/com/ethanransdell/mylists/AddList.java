@@ -21,9 +21,10 @@ public class AddList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_list);
 
-        mEditTextNewListName = (EditText) findViewById(R.id.edit_text_new_list_item_name);
+        mEditTextNewListName = (EditText) findViewById(R.id.edit_text_new_item_name);
         mButtonAdd = (Button) findViewById(R.id.button_add);
 
+        //FIXME Not working
         mEditTextNewListName.requestFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(mEditTextNewListName, InputMethodManager.SHOW_IMPLICIT);
@@ -35,7 +36,7 @@ public class AddList extends AppCompatActivity {
                     dbh.addList(mEditTextNewListName.getText().toString());
                     goToMainActivity();
                 } else {
-                    mEditTextNewListName.setError("Enter a valid list name.");
+                    mEditTextNewListName.setError(getString(R.string.new_list_validation));
                 }
             }
         });

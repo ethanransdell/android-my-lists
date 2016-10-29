@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -100,7 +102,8 @@ public class MainActivity extends AppCompatActivity {
             row.setLayoutParams(new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT));
             Button listButton = new Button(this);
             listButton.setLayoutParams(new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT));
-            listButton.setText(listsMap.get(listId));
+            listButton.setAllCaps(false);
+            listButton.setText(StringUtils.capitalize(listsMap.get(listId)));
             listButton.setTag(R.string.LIST_ID_KEY, listId);
             listButton.setTag(R.string.LIST_NAME_KEY, listsMap.get(listId));
             listButton.setOnClickListener(new View.OnClickListener() {
@@ -111,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
             });
             row.addView(listButton);
             layout.addView(row);
-            System.out.println("Created button for list " + listId + ": " + listsMap.get(listId));
+            System.out.println("Created button for list " + listId + " (ID " + listsMap.get(listId) + ")");
         }
     }
 }

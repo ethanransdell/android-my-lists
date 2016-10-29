@@ -18,7 +18,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="@string/title_view_list">
+            app:title="@string/title_activity_view_list">
 
             <ImageButton
                 android:layout_width="wrap_content"
@@ -35,7 +35,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floating_add_list_item"
+        android:id="@+id/floating_add_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
