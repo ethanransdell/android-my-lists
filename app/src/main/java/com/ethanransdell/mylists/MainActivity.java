@@ -4,9 +4,7 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.provider.BaseColumns;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,20 +14,14 @@ import android.widget.LinearLayout;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    private SharedPreferences prefs = null;
-    private Map<String, String> listsMap;
-    private List<String> listsList;
-
-    private Cursor dbResults;
     private DBHelper dbh = new DBHelper(this);
+    private Map<String, String> listsMap;
+    private Cursor lists;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        prefs = getSharedPreferences("com.ethanransdell.mylists", MODE_PRIVATE);
 
         FloatingActionButton floating_new_list = (FloatingActionButton) findViewById(R.id.floating_new_list);
         floating_new_list.setOnClickListener(new View.OnClickListener() {
@@ -47,14 +38,10 @@ public class MainActivity extends AppCompatActivity {
                 goToAddList();
             }
         });
-//        if (prefs.getBoolean("firstrun", true) || !prefs.contains("firstrun")) {
-//            SQLiteDatabase db = openOrCreateDatabase("my_lists", MODE_PRIVATE, null);
-//            db.execSQL("CREATE TABLE IF NOT EXISTS lists(" + BaseColumns._ID + " INTEGER PRIMARY KEY, list_name TEXT);");
-//            db.execSQL("CREATE TABLE IF NOT EXISTS list_items(" + BaseColumns._ID + " INTEGER PRIMARY KEY, list_id INTEGER, list_item_name TEXT);");
-//            db.close();
-//            dbh.firstRun();
-//            prefs.edit().putBoolean("firstrun", false).commit();
-//        }
+
+        // Remove the shared preference used before v6 because we're using onCreate now
+        SharedPreferences preferences = getSharedPreferences("com.ethanransdell.mylists", MODE_PRIVATE);
+        if (preferences.contains("firstrun")) preferences.edit().remove("firstrun").commit();
     }
 
     @Override
@@ -64,16 +51,13 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout previousLayout = (LinearLayout) findViewById(R.id.content_main);
         previousLayout.removeAllViews();
         // Query for lists
-        dbResults = dbh.getLists();
-        listsMap = new HashMap<>();
-        listsList = new ArrayList<>();
-        while (dbResults.moveToNext()) {
-            listsMap.put(dbResults.getString(0), dbResults.getString(1));
-            listsList.add(dbResults.getString(0));
+        lists = dbh.getLists();
+        listsMap = new LinkedHashMap<>();
+        while (lists.moveToNext()) {
+            listsMap.put(lists.getString(0), lists.getString(1));
         }
-        Collections.sort(listsList);
         createListButtons();
-        dbh.printTable("lists");
+        dbh.printLists();
     }
 
     public void goToAddList() {
@@ -94,11 +78,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void createListButtons() {
         System.out.println("Creating list buttons.");
-
         LinearLayout layout = (LinearLayout) findViewById(R.id.content_main);
         layout.setOrientation(LinearLayout.VERTICAL);
-
-        for (String listId : listsList) {
+        for (String listId : listsMap.keySet()) {
             LinearLayout row = new LinearLayout(this);
             row.setLayoutParams(new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT));
             Button listButton = new Button(this);

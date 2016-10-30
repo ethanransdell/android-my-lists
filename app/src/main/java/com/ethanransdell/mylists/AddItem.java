@@ -11,15 +11,14 @@ import android.widget.Button;
 import android.widget.EditText;
 
 public class AddItem extends AppCompatActivity {
+
+    private DBHelper dbh = new DBHelper(this);
     private Intent incomingIntent;
     private Bundle incomingExtras;
     private String listId;
     private String listName;
-
     private EditText mEditTextNewItemName;
     private Button mButtonAdd;
-
-    private DBHelper dbh = new DBHelper(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +54,7 @@ public class AddItem extends AppCompatActivity {
     }
 
     public boolean itemNameIsValid() {
-        if (mEditTextNewItemName.getText().toString() != null && mEditTextNewItemName.getText().toString() != "") {
+        if (mEditTextNewItemName.getText().toString() != null || mEditTextNewItemName.getText().toString() != "") {
             return true;
         } else {
             return false;
