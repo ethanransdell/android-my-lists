@@ -75,6 +75,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("list_name", listName);
+        contentValues.put("priority", getLists().getCount());
         db.insert("lists", null, contentValues);
         return true;
     }
@@ -84,6 +85,7 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put("list_id", listId);
         contentValues.put("list_item_name", itemName);
+        contentValues.put("priority", getItems(listId).getCount());
         db.insert("list_items", null, contentValues);
         return true;
     }

@@ -47,8 +47,6 @@ public class MainActivity extends AppCompatActivity {
                 goToAddList();
             }
         });
-        dbh.printTable("lists");
-        dbh.printTable("list_items");
 //        if (prefs.getBoolean("firstrun", true) || !prefs.contains("firstrun")) {
 //            SQLiteDatabase db = openOrCreateDatabase("my_lists", MODE_PRIVATE, null);
 //            db.execSQL("CREATE TABLE IF NOT EXISTS lists(" + BaseColumns._ID + " INTEGER PRIMARY KEY, list_name TEXT);");
@@ -75,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         }
         Collections.sort(listsList);
         createListButtons();
+        dbh.printTable("lists");
     }
 
     public void goToAddList() {
