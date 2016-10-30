@@ -31,11 +31,25 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("ALTER TABLE list_items ADD COLUMN priority INTEGER;");
         db.execSQL("UPDATE lists SET priority = 1;");
         db.execSQL("UPDATE list_items SET priority = 1;");
+        Cursor lists = db.rawQuery("SELECT * FROM lists ORDER BY _id;", null);
+        int listPriority = 0;
+        while (lists.moveToNext()) {
+            db.execSQL("UPDATE lists SET priority = " + listPriority + " WHERE _id = " + lists.getInt(0) + ";");
+            Cursor items = db.rawQuery("SELECT * FROM list_items WHERE list_id = " + lists.getInt(0) + " ORDER BY _id;", null);
+            int itemPriority = 0;
+            while (items.moveToNext()) {
+                db.execSQL("UPDATE list_items SET priority = " + itemPriority + " WHERE _id = " + items.getInt(0) + ";");
+                itemPriority++;
+            }
+            listPriority++;
+        }
     }
 
     public boolean firstRun(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE IF NOT EXISTS lists(" + BaseColumns._ID + " INTEGER PRIMARY KEY, list_name TEXT);");
-        db.execSQL("CREATE TABLE IF NOT EXISTS list_items(" + BaseColumns._ID + " INTEGER PRIMARY KEY, list_id INTEGER, list_item_name TEXT);");
+//        db.execSQL("CREATE TABLE IF NOT EXISTS lists(" + BaseColumns._ID + " INTEGER PRIMARY KEY, list_name TEXT);");
+//        db.execSQL("CREATE TABLE IF NOT EXISTS list_items(" + BaseColumns._ID + " INTEGER PRIMARY KEY, list_id INTEGER, list_item_name TEXT);");
+        db.execSQL("CREATE TABLE IF NOT EXISTS lists(" + BaseColumns._ID + " INTEGER PRIMARY KEY, list_name TEXT, priority INTEGER);");
+        db.execSQL("CREATE TABLE IF NOT EXISTS list_items(" + BaseColumns._ID + " INTEGER PRIMARY KEY, list_id INTEGER, list_item_name TEXT, priority INTEGER);");
         System.out.println("Created tables.");
         ContentValues sampleListsValues;
         ContentValues sampleItemsValues;
@@ -44,11 +58,13 @@ public class DBHelper extends SQLiteOpenHelper {
         for (int i = 0; i < 3; i++) {
             sampleListsValues = new ContentValues();
             sampleListsValues.put("list_name", "Sample List " + (i + 1));
+            sampleListsValues.put("priority", i);
             newListRowId = db.insert("lists", null, sampleListsValues);
             for (int j = 0; j < 5; j++) {
                 sampleItemsValues = new ContentValues();
                 sampleItemsValues.put("list_id", newListRowId.toString());
                 sampleItemsValues.put("list_item_name", "Sample Item " + (j + 1));
+                sampleItemsValues.put("priority", j);
                 newItemRowId = db.insert("list_items", null, sampleItemsValues);
             }
         }
