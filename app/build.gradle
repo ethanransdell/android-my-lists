@@ -15,8 +15,8 @@ android {
         applicationId "com.ethanransdell.mylists"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 5
-        versionName "5"
+        versionCode 6
+        versionName "6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

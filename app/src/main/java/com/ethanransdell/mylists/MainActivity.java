@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             listsMap.put(lists.getString(0), lists.getString(1));
         }
         createListButtons();
-        dbh.printTable("lists");
+        dbh.printLists();
     }
 
     public void goToAddList() {

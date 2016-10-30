@@ -112,6 +112,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 int displacedItemId = itemsList.get(displacedItemPriority);
                 itemsList.set(displacedItemPriority, Integer.parseInt(movingItemId));
                 itemsList.set(movingItemPriority, displacedItemId);
+                for (int i = 0; i < itemsList.size(); i++) {
+                    db.execSQL("UPDATE list_items SET priority = " + i + " WHERE _id = " + itemsList.get(i) + ";");
+                }
                 return true;
             }
         }
@@ -148,20 +151,32 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public Cursor getLists() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor lists = db.rawQuery("SELECT * FROM lists ORDER BY priority, _id;", null);
+        Cursor lists = db.rawQuery("SELECT * FROM lists ORDER BY list_name, priority;", null);
         return lists;
     }
 
     public Cursor getItems(String listId) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor items = db.rawQuery("SELECT * FROM list_items WHERE list_id = " + listId + " ORDER BY priority, _id;", null);
+        Cursor items = db.rawQuery("SELECT * FROM list_items WHERE list_id = " + listId + " ORDER BY priority;", null);
         return items;
     }
 
-    public void printTable(String tableName) {
+    public void printLists() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor results = db.rawQuery("SELECT * FROM " + tableName + " ORDER BY priority, _id;", null);
-        System.out.println("CONTENTS OF " + tableName + " TABLE:");
+        Cursor results = db.rawQuery("SELECT * FROM lists ORDER BY priority, _id;", null);
+        System.out.println("CONTENTS OF lists TABLE:");
+        while (results.moveToNext()) {
+            for (int i = 0; i < results.getColumnCount(); i++) {
+                System.out.print(results.getString(i) + "\t");
+            }
+            System.out.println();
+        }
+    }
+
+    public void printItems(String listId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor results = db.rawQuery("SELECT * FROM list_items WHERE list_id = " + listId + " ORDER BY priority, _id;", null);
+        System.out.println("CONTENTS OF list_items TABLE:");
         while (results.moveToNext()) {
             for (int i = 0; i < results.getColumnCount(); i++) {
                 System.out.print(results.getString(i) + "\t");

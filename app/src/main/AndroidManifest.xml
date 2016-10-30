@@ -14,7 +14,6 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -25,7 +24,8 @@
         <activity
             android:name=".ViewList"
             android:label="@string/title_activity_view_list"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName="com.ethanransdell.mylists.MainActivity"/>
         <activity
             android:name=".AddItem"
             android:label="@string/title_activity_add_item"
