@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,17 +25,15 @@ import org.apache.commons.lang3.StringUtils;
 
 public class ViewList extends AppCompatActivity {
 
+    private DBHelper dbh = new DBHelper(this);
+
     private Intent incomingIntent;
     private Bundle incomingExtras;
     private String listId;
     private String listName;
     private ImageButton mButtonDelete;
-
     private Map<String, String> itemsMap;
-    private List<String> itemsList;
-
-    private Cursor dbResults;
-    private DBHelper dbh = new DBHelper(this);
+    private Cursor items;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +42,8 @@ public class ViewList extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton floating_add_list_item = (FloatingActionButton) findViewById(R.id.floating_add_item);
-        floating_add_list_item.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton floating_add_item = (FloatingActionButton) findViewById(R.id.floating_add_item);
+        floating_add_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 goToAddItem();
@@ -80,15 +79,12 @@ public class ViewList extends AppCompatActivity {
         // Remove any previously created buttons so we can rebuild them if the user presses the back button
         LinearLayout previousLayout = (LinearLayout) findViewById(R.id.content_view_list);
         previousLayout.removeAllViews();
-        // Query for lists
-        dbResults = dbh.getItems(listId);
-        itemsMap = new HashMap<>();
-        itemsList = new ArrayList<>();
-        while (dbResults.moveToNext()) {
-            itemsMap.put(dbResults.getString(0), dbResults.getString(2));
-            itemsList.add(dbResults.getString(0));
+        // Query for items
+        items = dbh.getItems(listId);
+        itemsMap = new LinkedHashMap<>();
+        while (items.moveToNext()) {
+            itemsMap.put(items.getString(0), items.getString(2));
         }
-        Collections.sort(itemsList);
         createItemButtons();
         dbh.printTable("list_items");
     }
@@ -114,7 +110,7 @@ public class ViewList extends AppCompatActivity {
     public void createItemButtons() {
         LinearLayout layout = (LinearLayout) findViewById(R.id.content_view_list);
         layout.setOrientation(LinearLayout.VERTICAL);
-        for (String itemId : itemsList) {
+        for (String itemId : itemsMap.keySet()) {
             LinearLayout row = new LinearLayout(this);
             row.setLayoutParams(new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT));
             Button itemButton = new Button(this);
@@ -142,7 +138,27 @@ public class ViewList extends AppCompatActivity {
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dbh.deleteItem(itemId);
+                        dbh.sortItems(listId);
                         v.setVisibility(View.GONE);
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+    }
+
+    public void deleteList() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.title_delete_list)
+                .setMessage(R.string.delete_list_confirmation)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dbh.deleteList(listId);
+                        goToMainActivity();
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -154,7 +170,7 @@ public class ViewList extends AppCompatActivity {
                 .show();
     }
 
-    public void deleteList() {
+    public void testDialog() {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.title_delete_list)
                 .setMessage(R.string.delete_list_confirmation)

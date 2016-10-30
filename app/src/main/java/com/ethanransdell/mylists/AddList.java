@@ -43,7 +43,7 @@ public class AddList extends AppCompatActivity {
     }
 
     public boolean listNameIsValid() {
-        if (mEditTextNewListName.getText().toString() != null && mEditTextNewListName.getText().toString() != "") {
+        if (mEditTextNewListName.getText().toString() != null || mEditTextNewListName.getText().toString() != "") {
             return true;
         } else {
             return false;
