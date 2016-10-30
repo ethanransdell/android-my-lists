@@ -90,6 +90,7 @@ public class ViewList extends AppCompatActivity {
         }
         Collections.sort(itemsList);
         createItemButtons();
+        dbh.printTable("list_items");
     }
 
     public void goToMainActivity() {

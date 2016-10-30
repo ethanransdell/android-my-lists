@@ -47,14 +47,14 @@ public class MainActivity extends AppCompatActivity {
                 goToAddList();
             }
         });
-        if (prefs.getBoolean("firstrun", true) || !prefs.contains("firstrun")) {
-            SQLiteDatabase db = openOrCreateDatabase("my_lists", MODE_PRIVATE, null);
-            db.execSQL("CREATE TABLE IF NOT EXISTS lists(" + BaseColumns._ID + " INTEGER PRIMARY KEY, list_name TEXT);");
-            db.execSQL("CREATE TABLE IF NOT EXISTS list_items(" + BaseColumns._ID + " INTEGER PRIMARY KEY, list_id INTEGER, list_item_name TEXT);");
-            db.close();
-            dbh.firstRun();
-            prefs.edit().putBoolean("firstrun", false).commit();
-        }
+//        if (prefs.getBoolean("firstrun", true) || !prefs.contains("firstrun")) {
+//            SQLiteDatabase db = openOrCreateDatabase("my_lists", MODE_PRIVATE, null);
+//            db.execSQL("CREATE TABLE IF NOT EXISTS lists(" + BaseColumns._ID + " INTEGER PRIMARY KEY, list_name TEXT);");
+//            db.execSQL("CREATE TABLE IF NOT EXISTS list_items(" + BaseColumns._ID + " INTEGER PRIMARY KEY, list_id INTEGER, list_item_name TEXT);");
+//            db.close();
+//            dbh.firstRun();
+//            prefs.edit().putBoolean("firstrun", false).commit();
+//        }
     }
 
     @Override
@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         }
         Collections.sort(listsList);
         createListButtons();
+        dbh.printTable("lists");
     }
 
     public void goToAddList() {
